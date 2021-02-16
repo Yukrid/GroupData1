@@ -83,7 +83,10 @@ namespace gd::warning{
 
     };
     
-    
+/* 
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+    //    gd::warning::implicit_converson_with_different_depth Void    //
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
     //(    gd::warning::implicit_conversion_with_different_depth Void    )//
     struct implicit_conversion_with_defferent_depth : public base_warning{
 
@@ -92,7 +95,20 @@ namespace gd::warning{
         implicit_conversion_with_defferent_depth(const std::string&, const uint16_t, const uint16_t) noexcept;
 
     };
+*/
 
+
+    //++++++++++++++++++++++++++++++++++++++++++++//
+    //    gd::warning::ignored_size_index Void    //
+    //++++++++++++++++++++++++++++++++++++++++++++//
+    struct ignored_size_index : public base_warning{
+
+        //+    Member Function    +//
+        // Construction Function
+        ignored_size_index (const std::string&, const size_t&) noexcept;
+
+    };
+    
 }
 
 #endif

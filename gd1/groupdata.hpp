@@ -5,14 +5,15 @@
 
 namespace gd{
 
-    //+++++++++++++++++++//
-    //    Common Type    //
-    //+++++++++++++++++++//
+    //++++++++++++++++++++//
+    //    Common Types    //
+    //++++++++++++++++++++//
     //->   groupdata.hpp    <-//
     //(    gd::Empty Void    )//
     struct Empty{
 
     };
+
 
 
     //(    gd::Rank Void Template    )//
@@ -21,6 +22,7 @@ namespace gd{
 
     };
     
+
     
     //(    gd::Shadow Void Template    )//
     template <typename... As>
@@ -34,7 +36,8 @@ namespace gd{
     };
     
 
-    //(    gd::Shadow<T, As...> Lamination Template    )//
+
+    //(    gd::Shadow<T, As...> Void Template    )//
     template <typename T, typename... As>
     struct Shadow<T, As...>{
         
@@ -53,37 +56,44 @@ namespace gd{
 
 
    
-
-    //(    gd::Range Lamination Template for Any    +//
+    //(    gd::Range Structure Template for any    )//
     template <typename T>
-    class Range{
+    struct Range{
         
         //+    Member Variables    +//
+        protected :
         T* _begin;
         T* _end;
- 
+
+
         //+    Member Functions    +//
         public :
         // Construction Function
         Range (void)         =delete;
         Range (T*, T*)        noexcept;
-        Range (const Range&) =delete;
-        Range (Range&&)      =delete;
+        Range (const Range&) =default;
+        Range (Range&&)      =default;
+
+        // Destruction Function
+        ~Range (void) =default;
 
         // Access Function
-        Range& operator= (const Range&) =delete;
-        Range& operator= (Range&&)      =delete;
-        T*     begin     (void)          noexcept;
-        T*     end       (void)          noexcept;
+        T* begin (void) noexcept;
+        T* end   (void) noexcept;
+        
+        // Binary Operation 
+        Range& operator= (const Range&) =default;
+        Range& operator= (Range&&)      =default;
     };
     
     
     
-    //(    gd::ConstRange Lamination Template for Any    +//
+    //(    gd::ConstRange Lamination Template for any    +//
     template <typename T>
     class ConstRange{
         
         //+    Member Variables    +//
+        protected :
         const T* _begin;
         const T* _end;
 
@@ -93,14 +103,19 @@ namespace gd{
         // Construction Function
         ConstRange (void)               =delete;
         ConstRange (const T*, const T*)  noexcept;
-        ConstRange (const ConstRange&)  =delete;
-        ConstRange (ConstRange&&)       =delete;
+        ConstRange (const ConstRange&)  =default;
+        ConstRange (ConstRange&&)       =default;
+
+        // Destruction Function
+        ~ConstRange (void) =default;
 
         // Access Function
-              ConstRange& operator= (const ConstRange&) =delete;
-              ConstRange& operator= (ConstRange&&)      =delete;
-        const T*          begin     (void)               noexcept;
-        const T*          end       (void)               noexcept;
+        const T* begin (void) noexcept;
+        const T* end   (void) noexcept;
+        
+        // Binary Operator
+        ConstRange& operator= (const ConstRange&) =default;
+        ConstRange& operator= (ConstRange&&)      =default;
     };
 
 
@@ -112,8 +127,8 @@ namespace gd{
     //->    groupdata.hpp    <-//
     constexpr Empty _key_;
 
-    
 
+    
 
     //+++++++++++++++++++++++//
     //    Common Variable    //
@@ -138,7 +153,8 @@ namespace gd{
     template <typename T>
     auto ostream(const T&, std::ostream&)           noexcept -> decltype(void(_ostream(std::declval<T>(), std::declval<std::ostream&>(), 0)));
 
-    //+    gd::[Object].depth    +//
+
+    //+    gd::[Type].depth    +//
     template <typename T>
     constexpr auto _depth(const T&, uint16_t, int32_t) noexcept -> decltype(std::declval<T>().depth(_key_));
     
@@ -179,27 +195,27 @@ namespace gd{
     template <typename... As>           struct Table;
 
 
-    // Elastic
+    // Class
     //->    group.hpp, group.inl    <-//
-    template <typename T, uint16_t D>   struct ElasticGroup;
+    template <typename T, uint16_t D>   struct ClassGroup;
     //->    tuple.hpp, tuple.inl    <-//
-    template <typename... As>           struct ElasticTuple;
+    template <typename... As>           struct ClassTuple;
     //->    alternative.hpp, alternative.inl    <-//
-    template <typename... As>           struct ElasticAlternative;
+    template <typename... As>           struct ClassAlternative;
     //->    array.hpp, array.inl    <-//
-    template <size_t S, typename T>     struct ElasticArray;
+    template <size_t S, typename T>     struct ClassArray;
     //->    vector.hpp, vector.inl    <-//
-    template <size_t S, typename T>     struct ElasticVector;
+    template <size_t S, typename T>     struct ClassVector;
     //->    list.hpp, list.inl    <-//
-    template <typename T>               struct ElasticList;
+    template <typename T>               struct ClassList;
     //->    view.hpp, view.inl    <-//
-    template <typename T>               struct ElasticView;
+    template <typename T>               struct ClassView;
     //->    bridge.hpp, bridge.inl    <-//
-    template <size_t S, typename... As> struct ElasticBridge;
+    template <size_t S, typename... As> struct ClassBridge;
     //->    bundle.hpp, bundle.inl    <-//
-    template <size_t S, typename... As> struct ElasticBundle;
+    template <size_t S, typename... As> struct ClassBundle;
     //->    table.hpp, table.inl    <-//
-    template <typename... As>           struct ElasticTable;
+    template <typename... As>           struct ClassTable;
 }
 
 

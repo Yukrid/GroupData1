@@ -266,10 +266,12 @@ namespace gd{
     ElasticArray<S, T>::ElasticArray(const ElasticArray<S, T>& ar_) noexcept
         : _elements { }
     {
+        To fix not uint16_t [
         for(uint16_t a=0; a<S; ++a){
             (_elements+a)->~T();
             new (_elements+a) T{ar_(a)};
         }
+        ]
         
         return;
     }
@@ -438,9 +440,11 @@ namespace gd{
    
     template <size_t S, typename T>
     ElasticArray<S, T>& ElasticArray<S, T>::operator=(ElasticArray<S, T>&& ar_) noexcept
-    { 
+    {
+        To fix[
         std::memcpy(_elements, ar_._elements, S*sizeof(T));
-        
+        ]
+
         return *this;
     }
  
@@ -464,6 +468,7 @@ namespace gd{
     template <size_t S, typename T> template <size_t R, typename U>
     ElasticArray<S, T>::operator ElasticArray<R, U> () const noexcept
     {
+        To fix[
         ElasticArray<R, U> ar;
         for(size_t a=0; a<R && a<S; ++a){
             ar[a]=_elements(a);
@@ -471,6 +476,7 @@ namespace gd{
         for(size_t a=S; a<R; ++a){
             ar[a]=_elements(S-1);
         }
+        ]
     
         return ar;
     }

@@ -31,9 +31,7 @@ namespace gd{
 
     //+    Namespace Variable    +//
     // groupdata.hpp groupdata.cpp
-    extern size_t _format_length_;
-
-    
+    extern size_t _format_length_; 
 }
     
 #include "gd1/groupdata.hpp"
