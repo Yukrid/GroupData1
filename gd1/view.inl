@@ -399,12 +399,12 @@ namespace gd{
     //    Attached Namespace Function    //
     //+++++++++++++++++++++++++++++++++++//
     template <typename T>
-    std::ostream& operator<<(std::ostream& os_, const gd::View<T>& lst_) noexcept
+    std::ostream& operator<<(std::ostream& os_, const gd::View<T>& vi_) noexcept
     {
-        if(lst_.size()) gd::ostream(lst_(0), os_);
-        for(uint16_t a=1; a<lst_.size(); ++a){
+        if(vi_.size()) gd::ostream(vi_(0), os_); 
+        for(uint16_t a=1; a<vi_.size(); ++a){
             os_<<std::endl;
-            gd::ostream(lst_(a), os_);
+            gd::ostream(vi_(a), os_);
         }
     
         return os_;

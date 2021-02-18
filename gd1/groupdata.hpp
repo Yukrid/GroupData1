@@ -1,6 +1,32 @@
 #ifndef GROUPDATA_GROUPDATA_HPP
 #define GROUPDATA_GROUPDATA_HPP
 
+#ifdef GROUPDATA_EXCEPTION
+    #define GROUPDATA_GROUP_EXCEPTION
+    #define GROUPDATA_TUPLE_EXCEPTION
+    #define GROUPDATA_ARRAY_EXCEPTION
+    #define GROUPDATA_VECTOR_EXCEPTION
+    #define GROUPDATA_LIST_EXCEPTION
+    #define GROUPDATA_STATIC_DEPTH_VIEW_EXCEPTION
+    #define GROUPDATA_VIEW_EXCEPTION
+    #define GROUPDATA_BRIDGE_EXCEPTION
+    #define GROUPDATA_BANDLE_EXCEPTION
+    #define GROUPDATA_TABLE_EXCEPTION
+#endif
+
+#ifdef GROUPDATA_WARNING
+    #define GROUPDATA_GROUP_WARNING
+    #define GROUPDATA_TUPLE_WARNING
+    #define GROUPDATA_ARRAY_WARNING
+    #define GROUPDATA_VECTOR_WARNING
+    #define GROUPDATA_LIST_WARNING
+    #define GROUPDATA_STATIC_DEPTH_VIEW_WARNING
+    #define GROUPDATA_VIEW_WARNING
+    #define GROUPDATA_BRIDGE_WARNING
+    #define GROUPDATA_BANDLE_WARNING
+    #define GROUPDATA_TABLE_WARNING
+#endif
+
 #include <iostream>
 
 namespace gd{
@@ -78,45 +104,16 @@ namespace gd{
         ~Range (void) =default;
 
         // Access Function
-        T* begin (void) noexcept;
-        T* end   (void) noexcept;
-        
+              T* begin (void)       noexcept;
+              T* end   (void)       noexcept;
+        const T* begin (void) const noexcept;
+        const T* end   (void) const noexcept;
+       
         // Binary Operation 
         Range& operator= (const Range&) =default;
         Range& operator= (Range&&)      =default;
     };
-    
-    
-    
-    //(    gd::ConstRange Lamination Template for any    +//
-    template <typename T>
-    class ConstRange{
-        
-        //+    Member Variables    +//
-        protected :
-        const T* _begin;
-        const T* _end;
 
- 
-        //+    Member Functions    +//
-        public :
-        // Construction Function
-        ConstRange (void)               =delete;
-        ConstRange (const T*, const T*)  noexcept;
-        ConstRange (const ConstRange&)  =default;
-        ConstRange (ConstRange&&)       =default;
-
-        // Destruction Function
-        ~ConstRange (void) =default;
-
-        // Access Function
-        const T* begin (void) noexcept;
-        const T* end   (void) noexcept;
-        
-        // Binary Operator
-        ConstRange& operator= (const ConstRange&) =default;
-        ConstRange& operator= (ConstRange&&)      =default;
-    };
 
 
 
@@ -128,7 +125,8 @@ namespace gd{
     constexpr Empty _key_;
 
 
-    
+
+
 
     //+++++++++++++++++++++++//
     //    Common Variable    //
@@ -136,7 +134,8 @@ namespace gd{
     //->    groupdata.hpp groupdata.cpp    <-//
     extern size_t _format_length_;
 
-    
+
+
 
 
     //++++++++++++++++++++++++//
@@ -164,7 +163,8 @@ namespace gd{
     template <typename T>
     constexpr auto depth(const T&, uint16_t)           noexcept-> decltype(_depth(std::declval<T>(), std::declval<uint16_t>(), 0));
 
-    
+
+
 
 
     //+++++++++++++++++++++++++++//
@@ -217,6 +217,8 @@ namespace gd{
     //->    table.hpp, table.inl    <-//
     template <typename... As>           struct ClassTable;
 }
+
+
 
 
 

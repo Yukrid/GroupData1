@@ -5,10 +5,10 @@
 
 namespace gd{
 
-    //+++++++++++++++++++++//
-    //    Tuple Objects    //
-    //+++++++++++++++++++++//
-    //(    gd::Tuple<As...> Void    )//
+    //+++++++++++++++++++//
+    //    Tuple Types    //
+    //+++++++++++++++++++//
+    //(    gd::Tuple Void    )//
     template <typename... As>
     struct Tuple{
         
@@ -26,6 +26,7 @@ namespace gd{
 
         // Access Function
         void operator= (const Tuple<As...>&) const noexcept;
+        void operator= (Tuple<As...>&&) const noexcept;
         
         // Casting Function
         template <typename... Bs>
@@ -34,35 +35,38 @@ namespace gd{
     };
 
 
-    //(    gd::Tuple<T, As...> Lamination for Lamination    )//
+    //(    gd::Tuple<T,As...> Lamination for Lamination    )//
     template <typename T, typename... As>
-    struct Tuple<T, As...>{
-        
-        //+    Member Variables    +//
-        T            element;
-        Tuple<As...> tuples;
-
-       
+    struct Tuple<T,As...>{
+ 
         //+    Static Functions    +//
         public : 
         static constexpr uint16_t depth (Empty =_key_) noexcept;
         static constexpr size_t   size  (Empty =_key_) noexcept;
+       
+
+        //+    Member Variables    +//
+        T            element;
+        Tuple<As...> tuples;
 
 
         //+    Member Functions    +//
         public :
         // Construction Function
-                         Tuple     (void)                          noexcept;
-                         Tuple     (const Tuple<T, As...>&)        noexcept;
-                         Tuple     (Tuple<T, As...>&&)             noexcept;
-                         Tuple     (const T&, const As&...)        noexcept;
-                         Tuple     (const T&, const Tuple<As...>&) noexcept;
-        template <typename... I>
-        Tuple<T, As...>& construct (I...) noexcept;
+                        Tuple     (void)                          noexcept;
+                        Tuple     (const Tuple<T,As...>&)         noexcept;
+                        Tuple     (Tuple<T,As...>&&)              noexcept;
+                        Tuple     (const T&, const As&...)        noexcept;
+                        Tuple     (const T&, const Tuple<As...>&) noexcept;
+        Tuple<T,As...>& construct (void)                          noexcept;
+        Tuple<T,As...>& construct (const Tuple<T,As...>&)         noexcept;
+        Tuple<T,As...>& construct (Tuple<T,As...>&&)              noexcept;
+        Tuple<T,As...>& construct (const T&, const As&...)        noexcept;
+        Tuple<T,As...>& construct (const T&, const Tuple<As...>&) noexcept;
 
         // Destruction Function
                          ~Tuple   (void) noexcept;
-        Tuple<T, As...>& destruct (void) noexcept;
+        Tuple<T,As...>& destruct (void) noexcept;
 
 
         // Reference Functions
@@ -71,8 +75,8 @@ namespace gd{
         template<uint16_t R>
         const auto&            _ref        (Rank<R>) const noexcept;
         const T&               _ref        (Rank<0>) const noexcept; 
-        const Tuple<T, As...>*  spec       (void)    const noexcept;
-        const Tuple<T, As...>&  operator() (size_t)  const noexcept;
+        const Tuple<T,As...>*  spec       (void)    const noexcept;
+        const Tuple<T,As...>&  operator() (size_t)  const noexcept;
 
         
         // Access Functions
@@ -81,10 +85,10 @@ namespace gd{
         template<uint16_t R>
         auto&            _path       (Rank<R>)                noexcept; 
         T&               _path       (Rank<0>)                noexcept;
-        Tuple<T, As...>*  data       (void)                   noexcept;
-        Tuple<T, As...>&  operator[] (size_t)                 noexcept;
-        Tuple<T, As...>&  operator=  (const Tuple<T, As...>&) noexcept;
-        Tuple<T, As...>&  operator=  (Tuple<T, As...>&&)      noexcept;
+        Tuple<T,As...>*  data       (void)                   noexcept;
+        Tuple<T,As...>&  operator[] (size_t)                 noexcept;
+        Tuple<T,As...>&  operator=  (const Tuple<T,As...>&) noexcept;
+        Tuple<T,As...>&  operator=  (Tuple<T,As...>&&)      noexcept;
 
         // Casting Functions
         template <uint16_t N, typename U, typename... Bs>
@@ -124,9 +128,9 @@ namespace gd{
     };
 
 
-    //(    gd::ElasticTuple<T, As...> Aggregated Lamination for Lamination    )//
+    //(    gd::ElasticTuple<T,As...> Aggregated Lamination for Lamination    )//
     template <typename T, typename... As>
-    struct ElasticTuple<T, As...>{
+    struct ElasticTuple<T,As...>{
         
         //+    Member Variables    +//
         T            element;
@@ -143,16 +147,16 @@ namespace gd{
         public :
         // Construction Function
                          ElasticTuple     (void)                                 noexcept;
-                         ElasticTuple     (const ElasticTuple<T, As...>&)        noexcept;
-                         ElasticTuple     (ElasticTuple<T, As...>&&)             noexcept;
+                         ElasticTuple     (const ElasticTuple<T,As...>&)        noexcept;
+                         ElasticTuple     (ElasticTuple<T,As...>&&)             noexcept;
                          ElasticTuple     (const T&, const As&...)               noexcept;
                          ElasticTuple     (const T&, const ElasticTuple<As...>&) noexcept;
         template <typename... I>
-        ElasticTuple<T, As...>& construct (I...) noexcept;
+        ElasticTuple<T,As...>& construct (I...) noexcept;
 
         // Destruction Function
                          ~ElasticTuple   (void) noexcept;
-        ElasticTuple<T, As...>& destruct (void) noexcept;
+        ElasticTuple<T,As...>& destruct (void) noexcept;
 
 
         // Reference Functions
@@ -161,8 +165,8 @@ namespace gd{
         template<uint16_t R>
         const auto&            _ref        (Rank<R>)       const noexcept;
         const T&               _ref        (Rank<0>)       const noexcept; 
-        const ElasticTuple<T, As...>*  spec       (void)   const noexcept;
-        const ElasticTuple<T, As...>&  operator() (size_t) const noexcept;
+        const ElasticTuple<T,As...>*  spec       (void)   const noexcept;
+        const ElasticTuple<T,As...>&  operator() (size_t) const noexcept;
 
         
         // Access Functions
@@ -171,14 +175,14 @@ namespace gd{
         template<uint16_t R>
         auto&            _path       (Rank<R>)                              noexcept; 
         T&               _path       (Rank<0>)                              noexcept;
-        ElasticTuple<T, As...>*  data       (void)                          noexcept;
-        ElasticTuple<T, As...>& operator[] (size_t)                        noexcept;
-        ElasticTuple<T, As...>& operator=       (const ElasticTuple<T, As...>&)                          noexcept;
-        ElasticTuple<T, As...>& operator=       (ElasticTuple<T, As...>&&)                               noexcept; 
+        ElasticTuple<T,As...>*  data       (void)                          noexcept;
+        ElasticTuple<T,As...>& operator[] (size_t)                        noexcept;
+        ElasticTuple<T,As...>& operator=       (const ElasticTuple<T,As...>&)                          noexcept;
+        ElasticTuple<T,As...>& operator=       (ElasticTuple<T,As...>&&)                               noexcept; 
         template <typename... Bs>
-        ElasticTuple<T, As...>& operator=       (const ElasticTuple<std::remove_reference_t<T>, Bs...>&) noexcept;
+        ElasticTuple<T,As...>& operator=       (const ElasticTuple<std::remove_reference_t<T>, Bs...>&) noexcept;
         template <typename... Bs>
-        ElasticTuple<T, As...>& operator=       (ElasticTuple<std::remove_reference_t<T>, Bs...>&&)      noexcept;
+        ElasticTuple<T,As...>& operator=       (ElasticTuple<std::remove_reference_t<T>, Bs...>&&)      noexcept;
 
 
         // Casting Functions
@@ -188,7 +192,7 @@ namespace gd{
         void _cast_tuple(Rank<0>, ElasticTuple<U, Bs...>&) const noexcept;
         template <typename U, typename... Bs>
         operator ElasticTuple<U, Bs...> ()                 const noexcept;
-        operator ElasticTuple<std::remove_reference<T>, As...> () const noexcept;
+        operator ElasticTuple<std::remove_reference<T>,As...> () const noexcept;
     };
 
 
@@ -201,11 +205,11 @@ namespace gd{
     template <typename... As>
     std::ostream& operator<<(std::ostream&, const gd::Tuple<As...>&)           noexcept;
     template <typename T, typename... As>
-    std::ostream& operator<<(std::ostream&, const gd::Tuple<T, As...>&)        noexcept;
+    std::ostream& operator<<(std::ostream&, const gd::Tuple<T,As...>&)        noexcept;
     template <typename... As>
     std::ostream& operator<<(std::ostream&, const gd::ElasticTuple<As...>&)    noexcept;
     template <typename T, typename... As>
-    std::ostream& operator<<(std::ostream&, const gd::ElasticTuple<T, As...>&) noexcept;
+    std::ostream& operator<<(std::ostream&, const gd::ElasticTuple<T,As...>&) noexcept;
 
 }
 

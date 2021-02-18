@@ -1,7 +1,7 @@
 #ifndef GROUPDATA_GROUP_INL
 #define GROUPDATA_GROUP_INL
 
-#include "group.hpp"
+#include "./group.hpp"
 #include <cstring>
 
 namespace gd{
@@ -146,14 +146,7 @@ namespace gd{
     }
     #endif
    
-    
-    template <typename T, uint16_t D>
-    const Group<T,D>* Group<T,D>::data(void) const noexcept
-    { 
-        return this;
-    }
-    
-    
+ 
     template <typename T, uint16_t D>
     const Group<T,D>& Group<T,D>::operator[](const size_t& id_) const noexcept
     {
@@ -162,43 +155,88 @@ namespace gd{
         #endif
         return *this;
     }
+   
+
+    template <typename T, uint16_t D>
+    const T* Group<T,D>::data(void) const noexcept
+    { 
+        return _elements;
+    }
     
      
 #ifdef GROUPDATA_GROUP_EXCEPTION
     template <typename T, uint16_t D>
-    ConstRange<T> Group<T,D>::range(uint16_t e_) const
+    Range<const T> Group<T,D>::range(uint16_t e_) const
     {
         if(e_>D) throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", D, e_);
 
-        return ConstRange<T>{_elements, _elements+e_};
+        return Range<const T>{_elements, _elements+e_};
     }
 
         
     template <typename T, uint16_t D>
-    ConstRange<T> Group<T,D>::range(uint16_t b_, uint16_t e_) const
+    Range<const T> Group<T,D>::range(uint16_t b_, uint16_t e_) const
     {
-        if(b_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", D, b_);
-        if(e_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", D, e_);
-        if(b_>e_) throw exception::generation_of_backward_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", b_, e_);
+        if(b_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t, uint16_t)]", D, b_);
+        if(e_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t, uint16_t)]", D, e_);
+        if(b_>e_) throw exception::generation_of_backward_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t, uint16_t)]", b_, e_);
         
-        return ConstRange<T>{_elements+b_, _elements+e_};
+        return Range<const T>{_elements+b_, _elements+e_};
+    }
+    
+#else
+     
+    template <typename T, uint16_t D>
+    Range<const T> Group<T,D>::range(uint16_t e_) const noexcept
+    {
+        return Range<const T>{_elements, _elements+e_};
+    }
+
+            
+    template <typename T, uint16_t D>
+    Range<const T> Group<T,D>::range(uint16_t b_, uint16_t e_) const noexcept
+    {
+        return Range<const T>{_elements+b_, _elements+e_};
+    }
+#endif
+    
+
+#ifdef GROUPDATA_GROUP_EXCEPTION
+    template <typename T, uint16_t D>
+    const StaticDepthView<const T> Group<T,D>::view(uint16_t e_) const
+    {
+        if(e_>D) throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t)]", D, e_);
+
+        return StaticDepthView(e_, _elements);
+    }
+
+        
+    template <typename T, uint16_t D>
+    const StaticDepthView<const T> Group<T,D>::view(uint16_t b_, uint16_t e_) const
+    {
+        if(b_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t, uint16_t)]", D, b_);
+        if(e_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t, uint16_t)]", D, e_);
+        if(b_>e_) throw exception::generation_of_backward_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t, uint16_t)]", b_, e_);
+        
+        return StaticDepthView(e_-b_, _elements+b_);
     }
     
 #else
     
     template <typename T, uint16_t D>
-    ConstRange<T> Group<T,D>::range(uint16_t e_) const noexcept
+    const StaticDepthView<const T> Group<T,D>::view(uint16_t e_) const noexcept
     {
-        return ConstRange<T>{_elements, _elements+e_};
+        return StaticDepthView(e_, _elements);
     }
 
         
     template <typename T, uint16_t D>
-    ConstRange<T> Group<T,D>::range(uint16_t b_, uint16_t e_) const noexcept
+    const StaticDepthView<const T> Group<T,D>::view(uint16_t b_, uint16_t e_) const noexcept
     {
-        return ConstRange<T>{_elements+b_, _elements+e_};
+        return StaticDepthView(e_-b_, _elements+b_);
     }
 #endif
+
 
 
     // Access functions
@@ -227,13 +265,7 @@ namespace gd{
     }
 
 #endif 
-    
-    template <typename T, uint16_t D>
-    Group<T,D>* Group<T,D>::data(void) noexcept
-    { 
-        return this;
-    }
-    
+ 
 
     template <typename T, uint16_t D>
     Group<T,D>& Group<T,D>::operator[](const size_t& id_) noexcept
@@ -244,7 +276,14 @@ namespace gd{
 
         return *this;
     }
-    
+   
+
+    template <typename T, uint16_t D>
+    T* Group<T,D>::data(void) noexcept
+    { 
+        return _elements;
+    }
+     
     
 #ifdef GROUPDATA_GROUP_EXCEPTION
     template <typename T, uint16_t D>
@@ -284,6 +323,43 @@ namespace gd{
 #endif
 
 
+#ifdef GROUPDATA_GROUP_EXCEPTION
+    template <typename T, uint16_t D>
+    StaticDepthView<T> Group<T,D>::view(uint16_t e_)
+    {
+        if(e_>D) throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t)]", D, e_);
+
+        return StaticDepthView(e_, _elements);
+    }
+
+        
+    template <typename T, uint16_t D>
+    StaticDepthView<T> Group<T,D>::view(uint16_t b_, uint16_t e_)
+    {
+        if(b_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t, uint16_t)]", D, b_);
+        if(e_>D)  throw exception::generation_of_over_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t, uint16_t)]", D, e_);
+        if(b_>e_) throw exception::generation_of_backward_range(std::string{"[gd::Group<"}+typeid(T).name()+", "+std::to_string(D)+">::view(uint16_t, uint16_t)]", b_, e_);
+        
+        return StaticDepthView(e_-b_, _elements+b_);
+    }
+    
+#else
+    
+    template <typename T, uint16_t D>
+    StaticDepthView<T> Group<T,D>::view(uint16_t e_) noexcept
+    {
+        return StaticDepthView(e_, _elements);
+    }
+
+        
+    template <typename T, uint16_t D>
+    StaticDepthView<T> Group<T,D>::view(uint16_t b_, uint16_t e_) noexcept
+    {
+        return StaticDepthView(e_-b_, _elements+b_);
+    }
+#endif
+    
+
 
     // Binary Operator
     template <typename T, uint16_t D>
@@ -304,23 +380,69 @@ namespace gd{
     }
 
 
+    template <typename T, uint16_t D>
+    Group<T,D>& Group<T,D>::operator=(std::initializer_list<T> lst_) noexcept
+    {
+        std::memcpy(_elements, lst_.begin(), sizeof(T)*(D>lst_.size() ? lst_.size() : D));
+
+        return *this;
+    }
+
+    
+    template <typename T, uint16_t D>
+    Group<T,D>& Group<T,D>::operator=(const Range<T>& r_) noexcept
+    {
+        size_t rsz=(static_cast<size_t>(r_.end()-r_.begin()));
+        std::memcpy(_elements, r_.begin(), sizeof(T)*(D>rsz ? rsz : D));
+
+        return *this;
+    }
+
+
+    template <typename T, uint16_t D>
+    Group<T,D>& Group<T,D>::operator=(const Range<const T>& r_) noexcept
+    {
+        size_t rsz=(static_cast<size_t>(r_.end()-r_.begin()));
+        std::memcpy(_elements, r_.begin(), sizeof(T)*(D>rsz ? rsz : D));
+
+        return *this;
+    }
+
+
+    template <typename T, uint16_t D>
+    Group<T,D>& Group<T,D>::operator=(const StaticDepthView<T>& sdv_) noexcept
+    {
+        std::memcpy(_elements, sdv_.data(), sizeof(T)*(D>sdv_.depth() ? sdv_.depth() : D));
+
+        return *this;
+    }
+    
+
 
     // Casting Function
-    template <typename T, uint16_t D> template <typename U, uint16_t E>
-    Group<T,D>::operator Group<U, E>() const noexcept
+    template <typename T, uint16_t D> template <uint16_t E>
+    Group<T,D>::operator Group<T,E>() const noexcept
     {
-        Group<U, E> gr;
+        Group<T,E> gr;
         std::memcpy(_elements, gr._elements, sizeof(T)*(D>E ? E : D));
-        for(size_t a=E; a<D; ++a){
-            std::memcpy(_elements+a, gr._elements+E-1, sizeof(T));
+
+        return gr;
+    }
+
+
+    template <typename T, uint16_t D> template <typename U, uint16_t E>
+    Group<T,D>::operator Group<U,E>() const noexcept
+    {
+        Group<U,E> gr;
+        for(uint16_t a=0; a<D && a<E; ++a){
+            gr(a)=static_cast<U>(_elements[a]);
         }
 
         return gr;
     }
 
 
-
-
+    /*
     //(    gd::ClassGroup<T,D> Structure Tempalte for Class    )//
     //+    Static Functions    +//
     template <typename T, uint16_t D>
@@ -381,10 +503,6 @@ namespace gd{
         for(uint16_t a=0; a<D && a<lst_.size(); ++a){
             (_elements+a)->~T();
             new (_elements+a) T{lst_.begin()[a]};
-        }
-        for(uint16_t a=lst_.size(); a<D; ++a){
-            (_elements+a)->~T();
-            new (_elements+a) T{lst_.end()[-1]};
         }
 
         return;
@@ -492,39 +610,40 @@ namespace gd{
      
 #ifdef GROUPDATA_GROUP_EXCEPTION
     template <typename T, uint16_t D>
-    ConstRange<T> ClassGroup<T,D>::range(uint16_t e_) const
+    Range<const T> ClassGroup<T,D>::range(uint16_t e_) const
     {
         if(e_>D) throw exception::generation_of_over_range(std::string{"[gd::ClassGroup<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", D, e_);
 
-        return ConstRange<T>{_elements, _elements+e_};
+        return Range<const T>{_elements, _elements+e_};
     }
 
         
     template <typename T, uint16_t D>
-    ConstRange<T> ClassGroup<T,D>::range(uint16_t b_, uint16_t e_) const
+    Range<const T> ClassGroup<T,D>::range(uint16_t b_, uint16_t e_) const
     {
         if(b_>D)  throw exception::generation_of_over_range(std::string{"[gd::ClassGroup<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", D, b_);
         if(e_>D)  throw exception::generation_of_over_range(std::string{"[gd::ClassGroup<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", D, e_);
         if(b_>e_) throw exception::generation_of_backward_range(std::string{"[gd::ClassGroup<"}+typeid(T).name()+", "+std::to_string(D)+">::range(uint16_t)]", b_, e_);
         
-        return ConstRange<T>{_elements+b_, _elements+e_};
+        return Range<const T>{_elements+b_, _elements+e_};
     }
     
 #else
     
     template <typename T, uint16_t D>
-    ConstRange<T> ClassGroup<T,D>::range(uint16_t e_) const noexcept
+    Range<const T> ClassGroup<T,D>::range(uint16_t e_) const noexcept
     {
-        return ConstRange<T>{_elements, _elements+e_};
+        return Range<const T>{_elements, _elements+e_};
     }
 
         
     template <typename T, uint16_t D>
-    ConstRange<T> ClassGroup<T,D>::range(uint16_t b_, uint16_t e_) const noexcept
+    Range<const T> ClassGroup<T,D>::range(uint16_t b_, uint16_t e_) const noexcept
     {
-        return ConstRange<T>{_elements+b_, _elements+e_};
+        return Range<const T>{_elements+b_, _elements+e_};
     }
 #endif
+
 
 
     // Access functions
@@ -634,6 +753,17 @@ namespace gd{
     }
 
 
+    template <typename T, uint16_t D>
+    ClassGroup<T,D>& ClassGroup<T,D>::operator=(std::initializer_list<T> lst_) noexcept
+    {
+        for(uint16_t a=0; a<D && a<lst_.size(); ++a){
+            _elements[a]=lst_.begin()[a];
+        }
+
+        return *this;
+    }
+
+
 
     // Casting Function
     template <typename T, uint16_t D> template <typename U, uint16_t E>
@@ -650,7 +780,7 @@ namespace gd{
         return std::move(gr);
     }
 
-
+    */
 
 
 
@@ -668,7 +798,7 @@ namespace gd{
         return os_;
     }
     
-  
+  /*
     template <typename T, uint16_t D>
     std::ostream& operator<<(std::ostream& os_, const gd::ClassGroup<T,D>& gr_) noexcept
     {
@@ -679,5 +809,6 @@ namespace gd{
  
         return os_;
     }
+    */
 }
 #endif

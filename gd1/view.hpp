@@ -17,10 +17,94 @@ namespace gd{
     //++++++++++++++++++++//
     //    View Objects    //
     //++++++++++++++++++++//
-    //->    view.hpp, view.inl    <-//
-    //(    gd::View Structure for Lamination    )//
+    ////->    view.hpp, view.inl    <-//
+    //(    gd::StaticDepthView Structure for Structure    )//
     template <typename T>
-    struct View{
+    struct StaticDepthView{
+                
+        //+    Member Variables    +//
+        protected :
+        const uint16_t _depth;
+              T* const _elements;
+        
+
+        //+    Static Functions    +//
+        public :
+        static constexpr size_t size (Empty =_key_) noexcept;
+        
+
+        //+    Member Functions    +//
+        public :
+        // Contruction Functions
+        StaticDepthView (uint16_t, T*)               noexcept;
+        StaticDepthView (const StaticDepthView<T>&) =default;
+        StaticDepthView (StaticDepthView<T>&&)      =default;
+
+        // Destruction Functions
+        ~StaticDepthView (void) noexcept;
+ 
+        // Reference functions
+    #ifdef GROUPDATA_VIEW_EXCEPTION
+        const T&                        operator() (uint16_t)           const;       
+    #else
+        const T&                        operator() (uint16_t)           const noexcept;       
+    #endif
+        const T*                        data       (void)               const noexcept;
+        const StaticDepthView<const T>& operator[] (const size_t&)      const noexcept;
+    #ifdef GROUPDATA_VIEW_EXCEPTION
+              ConstRange<T>             range      (void)               const;
+              ConstRange<T>             range      (uint16_t)           const;
+              ConstRange<T>             range      (uint16_t, uint16_t) const;
+        const StaticDepthView<const T>  view       (void)               const;
+        const StaticDepthView<const T>  view       (uint16_t)           const;
+        const StaticDepthView<const T>  view       (uint16_t, uint16_t) const;
+    #else
+              ConstRange<T>             range      (void)               const noexcept;
+              ConstRange<T>             range      (uint16_t)           const noexcept;
+              ConstRange<T>             range      (uint16_t, uint16_t) const noexcept;
+        const StaticDepthView<const T>  view       (void)               const noexcept;
+        const StaticDepthView<const T>  view       (uint16_t)           const noexcept;
+        const StaticDepthView<const T>  view       (uint16_t, uint16_t) const noexcept;
+    #endif
+        
+        // Access Functions
+    #ifdef GROUPDATA_VIEW_EXCEPTION
+        T&                  operator() (uint16_t);       
+    #else
+        T&                  operator() (uint16_t)           noexcept;       
+    #endif
+        T*                  data       (void)               noexcept;
+        StaticDepthView<T>& operator[] (const size_t&)      noexcept;
+    #ifdef GROUPDATA_VIEW_EXCEPTION
+        Range<T>            range      (void);
+        Range<T>            range      (uint16_t);
+        Range<T>            range      (uint16_t, uint16_t);
+        StaticDepthView<T>  view       (void);
+        StaticDepthView<T>  view       (uint16_t);
+        StaticDepthView<T>  view       (uint16_t, uint16_t);
+    #else
+        Range<T>            range      (void)               noexcept;
+        Range<T>            range      (uint16_t)           noexcept;
+        Range<T>            range      (uint16_t, uint16_t) noexcept;
+        StaticDepthView<T>  view       (void)               noexcept;
+        StaticDepthView<T>  view       (uint16_t)           noexcept;
+        StaticDepthView<T>  view       (uint16_t, uint16_t) noexcept;
+    #endif
+
+        // Binary Operators
+        StaticDepthView<T>& operator= (const StaticDepthView<T>&) noexcept;
+        StaticDepthView<T>& operator= (std::initializer_list<T>)  noexcept;
+
+        // Edit Functions
+        StaticDepthView<T>& memset (int) noexcept;
+    };
+    
+    
+    /* 
+    //->    view.hpp, view.inl    <-//
+    //(    gd::DynamicView Structure for Lamination    )//
+    template <typename T>
+    struct DynamicView{
                 
         //+    Member Variables    +//
         protected :
@@ -37,15 +121,15 @@ namespace gd{
         //+    Member Functions    +//
         public :
         // Contruction Functions
-                 View      (const size_t&, const size_t&, T*) noexcept;
-                 View      (const View<T>&)    noexcept;
-                 View      (View<T>&&)=delete;
+                 DynamicView      (const size_t&, const size_t&, T*) noexcept;
+                 DynamicView      (const DynamicView<T>&)    noexcept;
+                 DynamicView      (DynamicView<T>&&)=delete;
         template <typename... I>
-        View<T>& construct (I...)              noexcept;
+        DynamicView<T>& construct (I...)              noexcept;
 
         // Destruction Functions
-                 ~View    (void) noexcept;
-        View<T>& destruct (void) noexcept;
+                 ~DynamicView    (void) noexcept;
+        DynamicView<T>& destruct (void) noexcept;
  
         // Reference functions
         template<uint16_t N>
@@ -72,14 +156,14 @@ namespace gd{
         #endif
 
         // Edit Functions
-        View<T>& memset (uint32_t)      noexcept;
+        DynamicView<T>& memset (uint32_t)      noexcept;
     };
     
     
     
-    //(    gd::ElasticView Structure for Lamination    )//
+    //(    gd::DynamicClassView Structure for Lamination    )//
     template <typename T>
-    struct ElasticView{
+    struct DynamicClassView{
                 
         //+    Member Variables    +//
         protected :
@@ -96,15 +180,15 @@ namespace gd{
         //+    Member Functions    +//
         public :
         // Contruction Functions
-                        ElasticView (const size_t&, const size_t&, T*) noexcept;
-                        ElasticView (const ElasticView<T>&)            noexcept;
-                        ElasticView (ElasticView<T>&&)=delete;
+                        DynamicClassView (const size_t&, const size_t&, T*) noexcept;
+                        DynamicClassView (const DynamicClassView<T>&)            noexcept;
+                        DynamicClassView (DynamicClassView<T>&&)=delete;
         template <typename... I>
-        ElasticView<T>& construct   (I...)                             noexcept;
+        DynamicClassView<T>& construct   (I...)                             noexcept;
 
         // Destruction Functions
-                 ~ElasticView    (void) noexcept;
-        ElasticView<T>& destruct (void) noexcept;
+                 ~DynamicClassView    (void) noexcept;
+        DynamicClassView<T>& destruct (void) noexcept;
  
         // Reference functions
         template<uint16_t N>
@@ -132,25 +216,25 @@ namespace gd{
     
     };
 
-
-
-
+    */
     //+++++++++++++++++++++++++++++++++++//
     //    Attached Namespace Function    //
     //+++++++++++++++++++++++++++++++++++//
     template <typename T>
-    std::ostream& operator<<(std::ostream&, const gd::View<T>&) noexcept;
+    std::ostream& operator<<(std::ostream&, const gd::StaticDepthView<T>&) noexcept;
+    /*
     template <typename T>
     std::ostream& operator<<(std::ostream&, const gd::ElasticView<T>&) noexcept;
+    */
 }
 
 
 
-
+/*
 //++++++++++++++++++++++++++//
 //    Inline Definitions    //
 //++++++++++++++++++++++++++//
 #include "view.inl"
 #include "conversion.inl"
-
+*/
 #endif

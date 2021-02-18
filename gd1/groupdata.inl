@@ -35,53 +35,22 @@ namespace gd{
     }
 
 
-
-    //(    gd::ConstRange Lamination Template    +//
-    // Construction Function
     template <typename T>
-    ConstRange<T>::ConstRange(const T* b_, const T* e_) noexcept
-        : _begin {b_}
-        , _end   {e_}
-    {
-        return;
-    }
-
-
-
-    // Access Function
-    template <typename T>
-    const T* ConstRange<T>::begin(void) noexcept
+    const T* Range<T>::begin(void) const noexcept
     {
         return _begin;
     }
     
     
     template <typename T>
-    const T* ConstRange<T>::end (void) noexcept
+    const T* Range<T>::end (void) const noexcept
     {
         return _end;
     }
-    
-    
-    //(    gd::Shadow Lamination Template    )//
-    template <typename... As>
-    constexpr size_t Shadow<As...>::width(void)
-    {
-        return 0;
-    }
 
-    
-    //(    gd::Shadow<T, As...> Lamination Template    )//
-    // Static Functions
-    template <typename T, typename... As>
-    constexpr size_t Shadow<T, As...>::width(void)
-    {
-        constexpr size_t max_size=shadows.width();
-        
-        return sizeof(T)>max_size ? sizeof(T) : max_size;
-    }
 
-    
+
+
 
     //++++++++++++++++++++++++//
     //    Common Functions    //
